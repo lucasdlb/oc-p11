@@ -1,0 +1,5 @@
+[env]
+id = "LunarLander-v3"
+enable_wind = true
+wind_power = 5.0
+turbulence_power = 0.5

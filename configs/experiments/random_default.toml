@@ -1,0 +1,12 @@
+[run]
+name = "random_default"
+seed = 42
+
+[agent]
+type = "random"
+
+[includes]
+env = "default"
+evaluation = "standard"
+video = "standard"
+paths = "default"

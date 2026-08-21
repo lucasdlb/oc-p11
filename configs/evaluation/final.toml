@@ -1,0 +1,3 @@
+[evaluation]
+episodes = 200
+max_steps = 1000

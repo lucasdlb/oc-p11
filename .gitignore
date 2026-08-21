@@ -1,0 +1,19 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Local editor state
+.idea/
+.agents/
+.claude/
+
+# Notebook/runtime caches
+notebooks/.ipynb_checkpoints/
+__pycache__/

@@ -1,0 +1,12 @@
+[run]
+name = "random_quick"
+seed = 42
+
+[agent]
+type = "random"
+
+[includes]
+env = "default"
+evaluation = "quick"
+video = "quick"
+paths = "default"
