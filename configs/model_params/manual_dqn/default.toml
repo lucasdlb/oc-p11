@@ -1,16 +1,3 @@
-[run]
-name = "manual_dqn_wind_medium"
-seed = 42
-
-[agent]
-type = "manual_dqn"
-
-[includes]
-env = "wind_medium"
-evaluation = "standard"
-video = "standard"
-paths = "default"
-
 [train]
 total_timesteps = 200000
 

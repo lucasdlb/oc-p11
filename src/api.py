@@ -13,7 +13,7 @@ from src.config import ExperimentConfig, load_experiment_config
 from src.envs import ACTION_LABELS, OBSERVATION_LABELS, make_env
 
 
-DEFAULT_CONFIG = Path("configs/experiments/sb3_dqn_exp_001.toml")
+DEFAULT_CONFIG = Path("configs/experiments/sb3_dqn_default.toml")
 
 app = FastAPI(
     title="Eagle-1 LunarLander API",

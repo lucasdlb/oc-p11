@@ -16,4 +16,18 @@ wheels/
 
 # Notebook/runtime caches
 notebooks/.ipynb_checkpoints/
+notebooks/logs/
+notebooks/sb3_log*/
 __pycache__/
+
+# Generated training outputs
+models/
+reports/
+runs/
+/sb3_log_*
+*.zip
+*.pt
+artifact/
+artifacts/
+artefact/
+artefacts/

@@ -17,8 +17,10 @@ def evaluate_agent(
     agent: Agent,
     env_config: EnvConfig,
     evaluation_config: EvaluationConfig,
+    video_config: VideoConfig | None = None,
     seed: int | None,
     output_path: Path,
+    video_output_path: Path | None = None,
     logger: logging.Logger,
 ) -> list[EpisodeResult]:
     env = make_env(env_config)
@@ -81,6 +83,17 @@ def evaluate_agent(
         summary["steps_mean"],
         output_path,
     )
+
+    if video_config is not None and video_output_path is not None:
+        record_agent_episode(
+            agent=agent,
+            env_config=env_config,
+            video_config=video_config,
+            seed=seed,
+            output_path=video_output_path,
+            logger=logger,
+        )
+
     return results
 
 

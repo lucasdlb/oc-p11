@@ -4,7 +4,7 @@ import logging
 
 import gymnasium as gym
 
-from pretty_printer import PrettyPrinter
+from src.pretty_printer import PrettyPrinter
 from src.config import EnvConfig
 
 

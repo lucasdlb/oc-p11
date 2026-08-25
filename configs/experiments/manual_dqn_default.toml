@@ -5,26 +5,9 @@ seed = 42
 [agent]
 type = "manual_dqn"
 
-[includes]
+[experiment]
 env = "default"
 evaluation = "standard"
 video = "standard"
 paths = "default"
-
-[train]
-total_timesteps = 200000
-
-[algorithm]
-learning_rate = 0.0003
-replay_size = 100000
-learning_starts = 1000
-batch_size = 128
-gamma = 0.99
-eps_start = 0.9
-eps_end = 0.01
-eps_decay = 25000
-tau = 0.005
-train_freq = 1
-gradient_clip = 100.0
-net_arch = [128, 128]
-log_interval = 10
+model_params = "default"

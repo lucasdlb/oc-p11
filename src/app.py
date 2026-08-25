@@ -19,7 +19,7 @@ from src.config import load_experiment_config
 from src.envs import ACTION_LABELS, make_env
 
 
-DEFAULT_CONFIG = Path("configs/experiments/sb3_dqn_exp_001.toml")
+DEFAULT_CONFIG = Path("configs/experiments/sb3_dqn_default.toml")
 
 
 @lru_cache(maxsize=1)

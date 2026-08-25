@@ -1,49 +1,31 @@
 # OC P11 - LunarLander RL
 
-Outils CLI config-driven pour explorer, entrainer, evaluer et enregistrer des agents `LunarLander-v3`.
+Outils CLI config-driven pour explorer, entrainer et evaluer des agents `LunarLander-v3`.
 
 ## Commandes
 
 Inspecter l'environnement :
 
 ```bash
-uv run python main.py inspect --config configs/experiments/random_default.toml
+uv run python scripts/inspect.py --env configs/envs/default.toml
 ```
 
-Evaluer une baseline random :
+Evaluer une baseline random et generer une video sample :
 
 ```bash
-uv run python main.py evaluate --config configs/experiments/random_default.toml
-```
-
-Enregistrer une video random :
-
-```bash
-uv run python main.py record --config configs/experiments/random_default.toml
+uv run python scripts/evaluate.py --config configs/experiments/random_default.toml
 ```
 
 Entrainer SB3 DQN :
 
 ```bash
-uv run python main.py train --config configs/experiments/sb3_dqn_default.toml
+uv run python scripts/train.py --config configs/experiments/sb3_dqn_default.toml
 ```
 
-Evaluer SB3 DQN :
+Evaluer SB3 DQN et generer une video sample :
 
 ```bash
-uv run python main.py evaluate --config configs/experiments/sb3_dqn_default.toml
-```
-
-Enregistrer SB3 DQN :
-
-```bash
-uv run python main.py record --config configs/experiments/sb3_dqn_default.toml
-```
-
-Evaluer le meilleur modele SB3 DQN actuel :
-
-```bash
-uv run python main.py evaluate --config configs/experiments/sb3_dqn_exp_001.toml
+uv run python scripts/evaluate.py --config configs/experiments/sb3_dqn_default.toml
 ```
 
 Lancer l'API du pilote Eagle-1 :
@@ -75,19 +57,13 @@ uv run streamlit run src/app.py
 Entrainer le DQN PyTorch manuel :
 
 ```bash
-uv run python main.py train --config configs/experiments/manual_dqn_default.toml
+uv run python scripts/train.py --config configs/experiments/manual_dqn_default.toml
 ```
 
-Evaluer le DQN PyTorch manuel :
+Evaluer le DQN PyTorch manuel et generer une video sample :
 
 ```bash
-uv run python main.py evaluate --config configs/experiments/manual_dqn_default.toml
-```
-
-Enregistrer le DQN PyTorch manuel :
-
-```bash
-uv run python main.py record --config configs/experiments/manual_dqn_default.toml
+uv run python scripts/evaluate.py --config configs/experiments/manual_dqn_default.toml
 ```
 
 Lancer TensorBoard :
@@ -98,7 +74,7 @@ uv run tensorboard --logdir runs/tensorboard
 
 ## Organisation Des Configs
 
-Les experiences sont volontairement fines. Elles referencent des configs dediees via `[includes]` pour eviter de dupliquer environnement, evaluation, video et paths.
+Les experiences gardent l'identite du run, le type d'agent et les choix de configs a utiliser. Les parametres d'entrainement et d'algorithme restent separes dans `configs/model_params/`.
 
 ```text
 configs/
@@ -108,23 +84,20 @@ configs/
 |   |-- wind_medium.toml
 |   `-- wind_hard.toml
 |-- evaluation/
-|   |-- quick.toml
-|   |-- standard.toml
-|   `-- final.toml
+|   `-- standard.toml
 |-- video/
-|   |-- quick.toml
 |   `-- standard.toml
 |-- paths/
 |   `-- default.toml
+|-- model_params/
+|   |-- sb3_dqn/
+|   |   `-- default.toml
+|   `-- manual_dqn/
+|       `-- default.toml
 `-- experiments/
     |-- random_default.toml
-    |-- random_quick.toml
     |-- sb3_dqn_default.toml
-    |-- manual_dqn_default.toml
-    |-- sb3_dqn_wind_medium.toml
-    |-- manual_dqn_wind_medium.toml
-    |-- sb3_dqn_smoke.toml
-    `-- manual_dqn_smoke.toml
+    `-- manual_dqn_default.toml
 ```
 
 Exemple d'experience :
@@ -137,12 +110,17 @@ seed = 42
 [agent]
 type = "sb3_dqn"
 
-[includes]
+[experiment]
 env = "default"
 evaluation = "standard"
 video = "standard"
 paths = "default"
+model_params = "default"
+```
 
+Exemple de parametres modele :
+
+```toml
 [train]
 total_timesteps = 200000
 
@@ -193,11 +171,11 @@ runs/tensorboard/manual_dqn_default/
 Workflow de comparaison simple :
 
 ```bash
-uv run python main.py evaluate --config configs/experiments/random_default.toml
-uv run python main.py train --config configs/experiments/sb3_dqn_default.toml
-uv run python main.py train --config configs/experiments/manual_dqn_default.toml
-uv run python main.py evaluate --config configs/experiments/sb3_dqn_default.toml
-uv run python main.py evaluate --config configs/experiments/manual_dqn_default.toml
+uv run python scripts/evaluate.py --config configs/experiments/random_default.toml
+uv run python scripts/train.py --config configs/experiments/sb3_dqn_default.toml
+uv run python scripts/train.py --config configs/experiments/manual_dqn_default.toml
+uv run python scripts/evaluate.py --config configs/experiments/sb3_dqn_default.toml
+uv run python scripts/evaluate.py --config configs/experiments/manual_dqn_default.toml
 ```
 
 Comparer ensuite :
@@ -211,11 +189,8 @@ Comparer ensuite :
 
 ## Smoke Tests
 
-Configs courtes pour verifier le pipeline sans long entrainement :
+Pour verifier le chargement de config et l'environnement sans long entrainement :
 
 ```bash
-uv run python main.py train --config configs/experiments/sb3_dqn_smoke.toml
-uv run python main.py evaluate --config configs/experiments/sb3_dqn_smoke.toml
-uv run python main.py train --config configs/experiments/manual_dqn_smoke.toml
-uv run python main.py evaluate --config configs/experiments/manual_dqn_smoke.toml
+uv run python scripts/inspect.py --env configs/envs/default.toml
 ```

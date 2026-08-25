@@ -76,7 +76,7 @@ class ExperimentConfig:
 
 
 def load_experiment_config(path: Path) -> ExperimentConfig:
-    raw = _load_with_includes(path)
+    raw = _load_with_config_repos(path)
     run = RunConfig(**raw["run"])
     agent = AgentConfig(**raw["agent"])
     paths = _paths_config(raw.get("paths", {}))
@@ -93,6 +93,11 @@ def load_experiment_config(path: Path) -> ExperimentConfig:
         algorithm=raw.get("algorithm", {}),
         resolved_paths=resolved_paths,
     )
+
+
+def load_env_config(path: Path) -> EnvConfig:
+    raw = _read_toml(path)
+    return EnvConfig(**raw.get("env", raw))
 
 
 def resolve_paths(run_name: str, agent_type: str, paths: PathsConfig) -> ResolvedPaths:
@@ -114,15 +119,27 @@ def resolve_paths(run_name: str, agent_type: str, paths: PathsConfig) -> Resolve
     )
 
 
-def _load_with_includes(path: Path) -> dict[str, Any]:
+def _load_with_config_repos(path: Path) -> dict[str, Any]:
     raw = _read_toml(path)
-    includes = raw.pop("includes", {})
+    experiment = raw.pop("experiment", {})
+    model_params_alias = experiment.pop("model_params", None)
+    agent_type = raw.get("agent", {}).get("type")
+    config_root = path.parent.parent
     merged: dict[str, Any] = {}
 
-    for include_type, alias in includes.items():
-        include_dir = "envs" if include_type == "env" else include_type
-        include_path = path.parent.parent / include_dir / f"{alias}.toml"
-        merged = _deep_merge(merged, _read_toml(include_path))
+    if not experiment:
+        raise ValueError(f"Experiment config {path} must define experiment choices.")
+
+    for choice_type, alias in experiment.items():
+        choice_dir = "envs" if choice_type == "env" else choice_type
+        choice_path = config_root / choice_dir / f"{alias}.toml"
+        merged = _deep_merge(merged, _read_toml(choice_path))
+
+    if model_params_alias:
+        if not agent_type:
+            raise ValueError(f"Experiment config {path} must define agent.type.")
+        params_path = config_root / "model_params" / agent_type / f"{model_params_alias}.toml"
+        merged = _deep_merge(merged, _read_toml(params_path))
 
     return _deep_merge(merged, raw)
 

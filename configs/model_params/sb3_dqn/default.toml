@@ -1,28 +1,15 @@
-[run]
-name = "dqn_exp_001"
-seed = 42
-
-[agent]
-type = "sb3_dqn"
-
-[includes]
-env = "default"
-evaluation = "standard"
-video = "standard"
-paths = "default"
-
 [train]
 total_timesteps = 200000
 
 [algorithm]
-learning_rate = 0.0003
+learning_rate = 0.0001
 buffer_size = 100000
 learning_starts = 1000
-batch_size = 256
+batch_size = 64
 gamma = 0.99
 train_freq = 4
 gradient_steps = 1
-target_update_interval = 10
+target_update_interval = 1000
 exploration_fraction = 0.2
 exploration_initial_eps = 1.0
 exploration_final_eps = 0.05
